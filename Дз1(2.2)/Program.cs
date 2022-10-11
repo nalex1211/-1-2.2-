@@ -1,34 +1,13 @@
-﻿namespace MyApp;
-
-abstract public class Worker
+﻿public abstract class Worker
 {
     private string Name;
-    public string name
-    {
-        get => Name;
-        set => Name = value;
-    }
+    public string name { get => Name; }
 
-    protected string Position;
-    public string position
-    {
-        get => Position;
-        set => Position = value;
-    }
+    private string Position;
+    public string position { get => Position; set => Position = value; }
 
     private int WorkDay;
-    public int workDay
-    {
-        get => WorkDay;
-        set => WorkDay = value;
-    }
-
-    public Worker(string Name, string Position, int WorkDay)
-    {
-        this.Name = Name;
-        this.Position = Position;
-        this.WorkDay = WorkDay;
-    }
+    public int workDay { get => WorkDay; set => WorkDay = value; }
 
     public Worker(string Name) => this.Name = Name;
 
@@ -44,12 +23,12 @@ abstract public class Worker
     {
     }
 
-    abstract public void FillWorkDay();
+    public abstract void FillWorkDay();
 }
 
 public class Developer : Worker
 {
-    public Developer(string Name) : base(Name) => Position = "Developer";
+    public Developer(string Name) : base(Name) => position = "Developer";
 
     public override void FillWorkDay()
     {
@@ -63,7 +42,7 @@ public class Developer : Worker
 public class Manager : Worker
 {
     private Random random;
-    public Manager(string Name) : base(Name) => Position = "Manager";
+    public Manager(string Name) : base(Name) => position = "Manager";
 
     public override void FillWorkDay()
     {
@@ -81,8 +60,7 @@ public class Manager : Worker
 public class Team
 {
     private string Name;
-    List<Worker> workers = new List<Worker>();
-
+    private List<Worker> workers = new List<Worker>();
     public Team(string Name) => this.Name = Name;
 
     public void AddEmployee(Worker worker) => workers.Add(worker);
@@ -98,19 +76,17 @@ public class Team
         Console.WriteLine($"Team name: {Name}");
         workers.ForEach(w => Console.WriteLine($"Name:{w.name} - Position:{w.position} - WorkDay:{w.workDay}"));
     }
-
 }
 
 internal class Program
 {
-
-    static void Main(string[] args)
+    private static void Main(string[] args)
     {
-        Console.Write("Enter name of the team: ");
         string choice;
+        Console.Write("Enter team name: ");
         var team = new Team(Console.ReadLine());
         do {
-            Console.Write("Enter postion: ");
+            Console.Write("Enter position: ");
             switch (Console.ReadLine()) {
                 case "Developer":
                     Console.Write("Enter name: ");
@@ -127,15 +103,17 @@ internal class Program
                     team.AddEmployee(manager);
                     break;
             }
-            Console.Write("Do you want to add a new member?(yes/ no) ");
+            Console.Write("Do you want to add a new member?(yes/no): ");
             choice = Console.ReadLine();
         } while (choice != "no");
-        Console.Write("Do you want to see detailed info?(yes/no) ");
-        choice = Console.ReadLine();
-        if (choice == "yes")
-            team.PrintDetailedInfo();
-        else
-            team.PrintInfo();
-    }
 
+        Console.Write("Do you want to see detailed information?(yes/no): ");
+        choice = Console.ReadLine();
+        if (choice == "yes") {
+            team.PrintDetailedInfo();
+        }
+        else {
+            team.PrintInfo();
+        }
+    }
 }
