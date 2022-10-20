@@ -1,15 +1,15 @@
 ﻿public abstract class Worker
 {
-    private string Name;
-    public string name { get => Name; }
+    public string Name { get; }
 
-    private string Position;
-    public string position { get => Position; set => Position = value; }
+    public string Position { get; set; }
 
-    private int WorkDay;
-    public int workDay { get => WorkDay; set => WorkDay = value; }
+    public int WorkDay { get; set; }
 
-    public Worker(string Name) => this.Name = Name;
+    public Worker(string name)
+    {
+        Name = name ?? throw new ArgumentNullException(nameof(Name));
+    }
 
     public void Call()
     {
@@ -28,7 +28,11 @@
 
 public class Developer : Worker
 {
-    public Developer(string Name) : base(Name) => position = "Developer";
+    public Developer(string name) : base(name)
+    {
+        const string pos = "Developer";
+        Position = pos;
+    }
 
     public override void FillWorkDay()
     {
@@ -41,17 +45,24 @@ public class Developer : Worker
 
 public class Manager : Worker
 {
-    private Random random;
-    public Manager(string Name) : base(Name) => position = "Manager";
+    private Random random = new Random();
+    public Manager(string Name) : base(Name)
+    {
+        const string pos = "Manager";
+        Position = pos;
+    }
 
     public override void FillWorkDay()
     {
-        random = new Random();
-        for (int i = 0; i < random.Next(1, 10); i++) {
+        for (int i = 0; i < random.Next(1, 10); i++)
+        {
             Call();
         }
+
         Relax();
-        for (int i = 0; i < random.Next(1, 5); i++) {
+
+        for (int i = 0; i < random.Next(1, 5); i++) 
+        {
             Call();
         }
     }
@@ -60,21 +71,34 @@ public class Manager : Worker
 public class Team
 {
     private string Name;
-    private List<Worker> workers = new List<Worker>();
-    public Team(string Name) => this.Name = Name;
+    private readonly List<Worker> workers = new List<Worker>();
+    public Team(string name)
+    {
+        Name = name ?? throw new ArgumentNullException(nameof(Name));
+    }
 
-    public void AddEmployee(Worker worker) => workers.Add(worker);
+    public void AddEmployee(Worker worker) 
+    {
+        workers.Add(worker);
+    } 
 
     public void PrintInfo()
     {
         Console.WriteLine($"Team name: {Name}");
-        workers.ForEach(w => Console.WriteLine(w.name));
+        foreach (var worker in workers)
+        {
+            Console.WriteLine($"Name: {worker.Name}");
+        }
     }
 
     public void PrintDetailedInfo()
     {
         Console.WriteLine($"Team name: {Name}");
-        workers.ForEach(w => Console.WriteLine($"Name:{w.name} - Position:{w.position} - WorkDay:{w.workDay}"));
+        workers.ForEach(w => Console.WriteLine($"Name:{w.Name} - Position:{w.Position} - WorkDay:{w.WorkDay}"));
+        foreach (var worker in workers) 
+        {
+            Console.WriteLine($"Name:{worker.Name} - Position:{worker.Position} - Work Day:{worker.WorkDay}");
+        }
     }
 }
 
@@ -82,33 +106,39 @@ internal class Program
 {
     private static void Main(string[] args)
     {
-        string choice;
+        string choice, name, position, teamName;
         Console.Write("Enter team name: ");
-        var team = new Team(Console.ReadLine());
+        teamName = Console.ReadLine() ?? throw new ArgumentNullException(nameof(teamName));
+        var team = new Team(teamName);
         do {
             Console.Write("Enter position: ");
-            switch (Console.ReadLine()) {
+            position = Console.ReadLine() ?? throw new ArgumentNullException(nameof(position));
+
+            switch (position) {
                 case "Developer":
                     Console.Write("Enter name: ");
-                    var dev = new Developer(Console.ReadLine());
+                    name = Console.ReadLine() ?? throw new ArgumentNullException(nameof(name)); ;
+                    var dev = new Developer(name);
                     Console.Write("Enter WorkDay: ");
-                    dev.workDay = Convert.ToInt32(Console.ReadLine());
+                    dev.WorkDay = Convert.ToInt32(Console.ReadLine());
                     team.AddEmployee(dev);
                     break;
+
                 case "Manager":
                     Console.Write("Enter name: ");
-                    var manager = new Manager(Console.ReadLine());
+                    name = Console.ReadLine() ?? throw new ArgumentNullException(nameof(name)); ;
+                    var manager = new Manager(name);
                     Console.Write("Enter WorkDay: ");
-                    manager.workDay = Convert.ToInt32(Console.ReadLine());
+                    manager.WorkDay = Convert.ToInt32(Console.ReadLine());
                     team.AddEmployee(manager);
                     break;
             }
             Console.Write("Do you want to add a new member?(yes/no): ");
-            choice = Console.ReadLine();
+            choice = Console.ReadLine() ?? throw new ArgumentNullException(nameof(choice)); ;
         } while (choice != "no");
 
         Console.Write("Do you want to see detailed information?(yes/no): ");
-        choice = Console.ReadLine();
+        choice = Console.ReadLine() ?? throw new ArgumentNullException(nameof(choice)); ;
         if (choice == "yes") {
             team.PrintDetailedInfo();
         }
