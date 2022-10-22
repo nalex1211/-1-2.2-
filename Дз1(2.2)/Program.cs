@@ -94,7 +94,6 @@ public class Team
     public void PrintDetailedInfo()
     {
         Console.WriteLine($"Team name: {Name}");
-        workers.ForEach(w => Console.WriteLine($"Name:{w.Name} - Position:{w.Position} - WorkDay:{w.WorkDay}"));
         foreach (var worker in workers) 
         {
             Console.WriteLine($"Name:{worker.Name} - Position:{worker.Position} - Work Day:{worker.WorkDay}");
